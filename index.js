@@ -11,9 +11,8 @@ const cron = require("node-cron");
 const twilio = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
 const itemsToCheck = [
-  "https://store.ui.com/collections/unifi-network-smartpower/products/usp-pdu-pro",
   "https://store.ui.com/collections/unifi-protect/products/g4-doorbell-pro",
-  "https://store.ui.com/collections/unifi-protect-accessories/products/smart-sensor",
+  "https://store.ui.com/us/en/products/uacc-adapter-dbpoe"
 ];
 
 function checkItems() {
@@ -26,8 +25,8 @@ function checkItems() {
   axios.all(requests).then((result) => {
     result.forEach((res) => {
       const root = parse(res.data);
-      const title = root.querySelector(".comProduct__title").text;
-      const soldOut = root.querySelector("#titleSoldOutBadge");
+      const title = root.querySelector('title').text.split('-')[0].trim();
+      const soldOut = root.querySelector('button[label="Sold Out"]');
       if (!soldOut) sendText(`${title} is in stock`);
     });
   });
@@ -53,5 +52,5 @@ cron.schedule("0 12 * * 1", () => {
   sendText("Unify Works");
 });
 
-//Run on startup to ensure texting is working
+// Run on startup to ensure texting is working
 sendText("UnifyWorks");
