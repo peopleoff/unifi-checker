@@ -41,7 +41,7 @@ function sendText(message) {
 }
 
 //Run every hour and check website for items.
-cron.schedule("0 * * * *", () => {
+cron.schedule("*/10 * * * *", () => {
   console.log("Checking Items");
   checkItems();
 });
